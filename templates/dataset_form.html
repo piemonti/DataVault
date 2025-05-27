@@ -1,11 +1,10 @@
-\
 {% extends "base.html" %}
 
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
   <h1>{{ title }}</h1>
-  <form method="POST" action="{{ form_action }}">
+  <form method="POST" action="{{ form_action }}" enctype="multipart/form-data">
     <div class="mb-3">
       <label for="name" class="form-label">Dataset Name</label>
       <input type="text" class="form-control" id="name" name="name" value="{{ dataset.name if dataset else '' }}" required>
@@ -18,8 +17,17 @@
       <label for="location" class="form-label">Storage Location/Path</label>
       <input type="text" class="form-control" id="location" name="location" value="{{ dataset.location if dataset else '' }}" required>
     </div>
+    <div class="mb-3">
+      <label for="image" class="form-label">Dataset Image</label>
+      <input type="file" class="form-control" id="image" name="image" accept="image/*">
+      {% if dataset and dataset.image_path %}
+        <div class="mt-2">
+          <img src="{{ url_for('static', filename='uploads/' + dataset.image_path) }}" alt="{{ dataset.name }}" class="img-thumbnail" style="max-height: 200px;">
+          <p class="form-text">Current image. Upload a new one to replace it.</p>
+        </div>
+      {% endif %}
+    </div>
     <button type="submit" class="btn btn-primary">Save</button>
     <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancel</a>
   </form>
 {% endblock %}
-
